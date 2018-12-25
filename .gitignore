@@ -1,4 +1,5 @@
 node_modules
 dist
-lib/config/DevKey.ts
-DevKey
+/lib/config/DevKey.ts
+/DevKey
+quiet
