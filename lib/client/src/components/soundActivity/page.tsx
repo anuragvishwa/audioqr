@@ -3,6 +3,7 @@ import { Link, RouteProps } from "react-router-dom";
 import { SoundEntity, MemberEntity } from "../../model";
 import { withStyles, Theme, WithStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import { scanNearby as ScanNearby } from "./scan/scanNearby";
 
 const styles = theme => ({
   button: {
@@ -38,6 +39,10 @@ export const SoundActivity = withStyles(styles)(
 
       this.handleClickSend = () => {
         this.setState({ isClicked: true });
+        //1.Scan for nearby devices.
+        //2.Give a list of users.(Only 1 user)
+        //3.Fetch the data for selected user.
+
         this.props.fetchMemberById(this.props.soundId);
       };
 
@@ -50,11 +55,13 @@ export const SoundActivity = withStyles(styles)(
     render() {
       const { classes } = this.props;
       const isClicked = this.state.isClicked;
-      let text;
+      let text, comp;
       if (isClicked) {
         text = <h2>{this.props.member.avatar_url}</h2>;
+        comp = <ScanNearby />;
       } else {
-        text = <h2>Click to send data!!</h2>;
+        text = "";
+        comp = "";
       }
       return (
         <div>
@@ -66,6 +73,7 @@ export const SoundActivity = withStyles(styles)(
           >
             Send
           </Button>
+
           <br />
           <Button
             variant="contained"
@@ -76,6 +84,8 @@ export const SoundActivity = withStyles(styles)(
             Receive
           </Button>
           {text}
+          <br />
+          {comp}
         </div>
       );
     }
