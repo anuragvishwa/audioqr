@@ -1,36 +1,3 @@
-// import * as React from "react";
-// import { TransactionEntity } from "../../model";
-// import { Link, RouteProps } from "react-router-dom";
-
-// interface Props {
-//   transactionId: number;
-//   transaction: TransactionEntity;
-//   fetchTransactionById: (id: number) => void;
-// }
-
-// export class TransactionPage extends React.Component<Props & RouteProps, {}> {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   public componentDidMount() {
-//     this.props.fetchTransactionById(this.props.transactionId);
-//   }
-
-//   public render() {
-//     return (
-//       <div className="row">
-//         <div className="col-5">
-//           <div className="row">
-//             <h2> Transactions Page</h2>
-//             <Link to="/transactions">Transactions</Link>
-//           </div>
-//           {this.props.transaction.transaction_party}
-//         </div>
-//       </div>
-//     );
-//   }
-// }
 import * as React from "react";
 import { Link, RouteProps } from "react-router-dom";
 import { TransactionEntity } from "../../model";

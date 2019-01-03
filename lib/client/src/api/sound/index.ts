@@ -5,6 +5,12 @@ let mockMembers = members;
 let mockSound = sound;
 const userURL = "https://api.github.com/user";
 
+const createEmptyMember = (): MemberEntity => ({
+  id: -1,
+  login: "",
+  avatar_url: ""
+});
+
 const fetchMemberIdBySoundId = (soundId: number): Promise<SoundEntity> => {
   const sound = mockSound.find(m => m.id === soundId);
   return Promise.resolve(sound);
@@ -13,8 +19,17 @@ const fetchMemberIdBySoundId = (soundId: number): Promise<SoundEntity> => {
 const fetchMemberIdBySoundIdAsync = (soundId: number): Promise<number> => {
   const soundURL = `${userURL}/${soundId}`;
   return fetch(soundURL)
-    .then(response => response.json())
-    .then(mapSendSoundToSound);
+    .then(function(response) {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response.json();
+    })
+    .then(mapSendSoundToSound)
+    .catch(function(err) {
+      console.log(err);
+      return -1;
+    });
 };
 
 const mapSendSoundToSound = (githubMember): number => {
@@ -30,8 +45,17 @@ const fetchMemberByMemberId = (id: number): Promise<MemberEntity> => {
 const fetchMemberByMemberIdAsync = (id: number): Promise<MemberEntity> => {
   const membersURL = `${userURL}/${id}`;
   return fetch(membersURL)
-    .then(response => response.json())
-    .then(mapToMember);
+    .then(function(response) {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response.json();
+    })
+    .then(mapToMember)
+    .catch(function(err) {
+      console.log(err);
+      return createEmptyMember();
+    });
 };
 
 const mapToMember = (githubMember): MemberEntity => {

@@ -1,15 +1,20 @@
 import * as React from "react";
 import * as quiet from "./quiet";
 import Script from "react-load-script";
+import * as Rx from "rxjs";
 import postscribe from "postscribe";
 import * as sendText from "./sendtext";
 import * as quietems from "./quiet-emscripten";
 import { SoundEntity } from "../../../model";
+import * as ReactDOM from "react-dom";
+
+import EventListener, { withOptions } from "react-event-listener";
 
 interface Props {
   // sound: SoundEntity;
   // onChange: (fieldName: string, value: string) => void;
   // onSave: () => void;
+  handlerFromParent: (data) => void;
 }
 
 type State = {
@@ -18,46 +23,38 @@ type State = {
 };
 
 export class scanNearby extends React.Component<Props, State> {
-  handleClickSend: (value: String) => void;
   constructor(props) {
     super(props);
-    this.state = { text: "anurag", isValid: false };
 
-    this.handleClickSend = (value: String) => {
-      this.setState({ text: value });
-    };
+    this.state = { text: "Waiting to Receive Sound", isValid: false };
   }
+
+  componentDidMount() {
+    const container = document.querySelector(
+      "[data-quiet-receive-text-target]"
+    );
+    container.addEventListener("change", this.handleOnChange.bind(this));
+  }
+
+  handleOnChange = event => {
+    this.setState({ text: event.target.value }, () =>
+      this.props.handlerFromParent(this.state.text)
+    );
+  };
 
   render() {
     var flag = true;
-    let value;
-    if (this.state.text != "anurag") {
-      value = this.state.text;
-    } else {
-      value = "";
-    }
+
     return (
-      <div>
-        <Script url="../src/components/soundActivity/scan/quiet.js" />
-        <Script
-          async
-          url="../src/components/soundActivity/scan/receivetext.js"
-        />
-        <Script async url="../src/components/soundActivity/scan/sendtext.js" />
-        <Script
-          async
-          url="../src/components/soundActivity/scan/quiet-emscripten.js"
-        />
+      <div id="container">
+        <Script url="../src/components/soundActivity/scan/fileLoader.js" />
         <div className="hidden" data-quiet-profile-name="audible" />
         <div className="wrapper">
-          <header>
-            <h1>Receive Text</h1>
-          </header>
           <section>
             <div className="hidden" data-quiet-warning />
-            <pre data-quiet-receive-text-target>
-              Your received text will show up here. Waiting...
-            </pre>
+            <form>
+              <input id="kilo" type="hidden" data-quiet-receive-text-target />
+            </form>
           </section>
           <header>
             <h1>Send Text</h1>
@@ -68,6 +65,7 @@ export class scanNearby extends React.Component<Props, State> {
               <textarea className="form-control" data-quiet-text-input />
             </div>
             <button
+              id="send"
               type="button"
               className="btn btn-default"
               data-quiet-send-button
@@ -78,7 +76,6 @@ export class scanNearby extends React.Component<Props, State> {
             </button>
           </section>
         </div>
-        <h4>{value}</h4>
       </div>
     );
   }
