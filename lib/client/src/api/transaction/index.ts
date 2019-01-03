@@ -34,8 +34,7 @@ const mapToTransaction = (userTransaction): TransactionEntity => {
     transaction_party: userTransaction.transaction_party,
     transaction_status: userTransaction.transaction_status,
     transaction_time: userTransaction.transaction_time,
-    transaction_type: userTransaction.transaction_type,
-    avtart_url: userTransaction.avtart_url
+    transaction_type: userTransaction.transaction_type
   };
 };
 
@@ -46,8 +45,7 @@ const mapToTransactionAsync = (userTransaction): TransactionEntity => {
     transaction_party: userTransaction.name,
     transaction_status: userTransaction.hireables,
     transaction_time: userTransaction.created_at,
-    transaction_type: userTransaction.login,
-    avtart_url: userTransaction.avatar_url
+    transaction_type: userTransaction.login
   };
 };
 
@@ -64,9 +62,33 @@ const fetchTransactionByIdAsync = (id: number): Promise<TransactionEntity> => {
     .then(mapToTransactionAsync);
 };
 
+const saveTransaction = (transaction: TransactionEntity): Promise<boolean> => {
+  // const index = mockTransactions.findIndex(t => t.id === transaction.id);
+
+  // index >= 0 ? updateMember(member, index) : insertMember(member);
+
+  insertTransaction(transaction);
+  return Promise.resolve(true);
+};
+
+// const updateMember = (member: MemberEntity, index: number) => {
+//   mockMembers = [
+//     ...mockMembers.slice(0, index),
+//     member,
+//     ...mockMembers.slice(index + 1)
+//   ];
+// };
+
+const insertTransaction = (transaction: TransactionEntity) => {
+  // transaction.id = mockTransactions.length;
+
+  mockTransactions = [...mockTransactions, transaction];
+};
+
 export const transactionAPI = {
   fetchTransactions,
   fetchTransactionsAsync,
   fetchTransactionById,
-  fetchTransactionByIdAsync
+  fetchTransactionByIdAsync,
+  saveTransaction
 };

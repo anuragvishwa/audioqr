@@ -50,13 +50,7 @@ class TransactionCol extends React.Component<Props, State> {
         <Paper className={classes.paper}>
           <Grid container spacing={16}>
             <Grid item>
-              <ButtonBase className={classes.image}>
-                <img
-                  className={classes.img}
-                  alt="Avtar URL"
-                  src={this.props.transaction.avtart_url}
-                />
-              </ButtonBase>
+              <ButtonBase className={classes.image} />
             </Grid>
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={16}>

@@ -99,7 +99,7 @@ export const TransactionPage = withStyles(styles)(
           />
           <CardMedia
             className={classes.media}
-            image={this.props.transaction.avtart_url}
+            image="https://tinyjpg.com/images/social/website.jpg"
             title={this.props.transaction.transaction_type}
           />
           <CardContent>

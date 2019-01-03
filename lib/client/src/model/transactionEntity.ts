@@ -5,5 +5,4 @@ export interface TransactionEntity {
   transaction_status: String;
   transaction_amount: number;
   transaction_type: string;
-  avtart_url: string;
 }

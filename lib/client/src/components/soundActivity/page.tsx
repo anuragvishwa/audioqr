@@ -1,11 +1,21 @@
 import * as React from "react";
 import { Link, RouteProps } from "react-router-dom";
-import { SoundEntity, MemberEntity } from "../../model";
+import { SoundEntity, MemberEntity, TransactionEntity } from "../../model";
 import { withStyles, Theme, WithStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { scanNearby as ScanNearby } from "./scan/scanNearby";
 import { MemberForm } from "./memberForm";
 import * as ReactDOM from "react-dom";
+import * as randomId from "random-id";
+
+const createEmptyTransaction = (): TransactionEntity => ({
+  id: -1,
+  transaction_amount: 0,
+  transaction_party: null,
+  transaction_status: null,
+  transaction_time: null,
+  transaction_type: null
+});
 
 const styles = theme => ({
   button: {
@@ -20,9 +30,10 @@ interface Props extends WithStyles<typeof styles> {
   soundId: number;
   sound: SoundEntity;
   member: MemberEntity;
+  transaction: TransactionEntity;
   fetchMemberById(soundId: number): MemberEntity;
   fetchReceiveRequest(soundId: number): SoundEntity;
-  onSave: (member: MemberEntity) => void;
+  onSave: (transaction: TransactionEntity) => void;
 }
 
 type State = {
@@ -62,9 +73,36 @@ export const SoundActivity = withStyles(styles)(
       };
     }
 
-    private onSave() {
-      this.props.onSave(this.props.member);
+    private onSave(amount: number, reason: string) {
+      this.props.onSave(
+        this.mapToTransaction(
+          randomId(10, "0"),
+          amount,
+          reason,
+          "Fetching Member...",
+          "03-Jan-2019",
+          "Send"
+        )
+      );
     }
+
+    mapToTransaction = (
+      id: number,
+      transaction_amount: number,
+      transaction_status: string,
+      transaction_party: string,
+      transaction_time: string,
+      transaction_type: string
+    ): TransactionEntity => {
+      return {
+        id: id,
+        transaction_amount: transaction_amount,
+        transaction_status: transaction_status,
+        transaction_time: transaction_time,
+        transaction_party: transaction_party,
+        transaction_type: transaction_type
+      };
+    };
 
     handleNearByDevices(data) {
       this.setState({ SoundIdfromChild: data }, () =>

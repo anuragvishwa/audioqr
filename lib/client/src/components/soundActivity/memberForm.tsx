@@ -12,6 +12,11 @@ import { MemberEntity, MemberErrors } from "../../model";
 import { withStyles, Theme } from "@material-ui/core/styles";
 import { WithStyles, createStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { TransactionEntity } from "../../model";
+import Avatar from "@material-ui/core/Avatar";
+import deepOrange from "@material-ui/core/colors/deepOrange";
+import deepPurple from "@material-ui/core/colors/deepPurple";
+import Grid from "@material-ui/core/Grid";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,36 +35,29 @@ const styles = (theme: Theme) =>
     },
     input: {
       display: "none"
+    },
+    avatar: {
+      margin: 10
+    },
+    orangeAvatar: {
+      margin: 10,
+      color: "#fff",
+      backgroundColor: deepOrange[500]
+    },
+    purpleAvatar: {
+      margin: 10,
+      color: "#fff",
+      backgroundColor: deepPurple[500]
     }
   });
 
-const ranges = [
-  {
-    value: "0-20",
-    label: "0 to 20"
-  },
-  {
-    value: "21-50",
-    label: "21 to 50"
-  },
-  {
-    value: "51-100",
-    label: "51 to 100"
-  }
-];
-
 interface Props extends WithStyles<typeof styles> {
-  //onChange: (fieldName: string, value: string) => void;
-  onSave: () => void;
+  onSave: (amount: number, reason: string) => void;
 }
 
 type State = {
-  expanded: boolean;
-  amount: string;
-  password: string;
-  weight: string;
-  weightRange: string;
-  showPassword: Boolean;
+  amount: number;
+  reason: string;
 };
 
 export const MemberForm = withStyles(styles)(
@@ -67,28 +65,23 @@ export const MemberForm = withStyles(styles)(
     constructor(props) {
       super(props);
       this.state = {
-        expanded: false,
-        amount: "",
-        password: "",
-        weight: "",
-        weightRange: "",
-        showPassword: false
+        amount: 0,
+        reason: ""
       };
-      this.handleWeight = this.handleWeight.bind(this);
-      this.handleWeightRange = this.handleWeightRange.bind(this);
+      this.handleReason = this.handleReason.bind(this);
       this.handleAmount = this.handleAmount.bind(this);
-      this.handlePassword = this.handlePassword.bind(this);
+      this.onSave = this.onSave.bind(this);
     }
 
-    handleWeight(event) {
-      this.setState({
-        weight: event.target.value
-      });
+    onSave(event) {
+      if (this.state.amount != 0 && this.state.reason != "") {
+        this.props.onSave(this.state.amount, this.state.reason);
+      }
     }
 
-    handleWeightRange(event) {
+    handleReason(event) {
       this.setState({
-        weightRange: event.target.value
+        reason: event.target.value
       });
     }
 
@@ -98,54 +91,15 @@ export const MemberForm = withStyles(styles)(
       });
     }
 
-    handlePassword(event) {
-      this.setState({
-        password: event.target.value
-      });
-    }
-
-    handleClickShowPassword = () => {
-      this.setState(function(state, props) {
-        return {
-          showPassword: !state.showPassword
-        };
-      });
-    };
-
     render() {
       const { classes } = this.props;
       return (
         <div className={classes.root}>
-          <TextField
-            id="outlined-simple-start-adornment"
-            className={classNames(classes.margin, classes.textField)}
-            variant="outlined"
-            label="With outlined TextField"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">Kg</InputAdornment>
-              )
-            }}
-          />
-          <TextField
-            select
-            className={classNames(classes.margin, classes.textField)}
-            variant="outlined"
-            label="With Select"
-            value={this.state.weightRange}
-            onChange={this.handleWeightRange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">Kg</InputAdornment>
-              )
-            }}
-          >
-            {ranges.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Grid container justify="center" alignItems="center">
+            <Avatar className={classes.orangeAvatar}>H</Avatar>
+            -->
+            <Avatar className={classes.purpleAvatar}>O</Avatar>
+          </Grid>
           <TextField
             id="outlined-adornment-amount"
             className={classNames(classes.margin, classes.textField)}
@@ -153,56 +107,29 @@ export const MemberForm = withStyles(styles)(
             label="Amount"
             value={this.state.amount}
             onChange={this.handleAmount}
+            required
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
+                <InputAdornment position="start">₹</InputAdornment>
               )
             }}
           />
           <TextField
-            id="outlined-adornment-weight"
+            id="outlined-adornment-reason"
             className={classNames(classes.margin, classes.textField)}
             variant="outlined"
-            label="Weight"
-            value={this.state.weight}
-            onChange={this.handleWeight}
-            helperText="Weight"
-            InputProps={{
-              endAdornment: <InputAdornment position="end">Kg</InputAdornment>
-            }}
-          />
-          <TextField
-            id="outlined-adornment-password"
-            className={classNames(classes.margin, classes.textField)}
-            variant="outlined"
-            type={this.state.showPassword ? "text" : "password"}
-            label="Password"
-            value={this.state.password}
-            onChange={this.handlePassword}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="Toggle password visibility"
-                    onClick={this.handleClickShowPassword}
-                  >
-                    {this.state.showPassword ? (
-                      <VisibilityOff />
-                    ) : (
-                      <Visibility />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
+            label="Reason"
+            required
+            value={this.state.reason}
+            onChange={this.handleReason}
           />
           <Button
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={this.props.onSave}
+            onClick={this.onSave}
           >
-            Primary
+            Send
           </Button>
         </div>
       );
