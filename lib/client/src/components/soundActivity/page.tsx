@@ -7,15 +7,8 @@ import { scanNearby as ScanNearby } from "./scan/scanNearby";
 import { MemberForm } from "./memberForm";
 import * as ReactDOM from "react-dom";
 import * as randomId from "random-id";
-
-const createEmptyTransaction = (): TransactionEntity => ({
-  id: -1,
-  transaction_amount: 0,
-  transaction_party: null,
-  transaction_status: null,
-  transaction_time: null,
-  transaction_type: null
-});
+import { BroadcastId } from "../soundActivity/scan/broadcastId";
+import Script from "react-load-script";
 
 const styles = theme => ({
   button: {
@@ -37,11 +30,14 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 type State = {
-  enabled: string;
+  enabled: Boolean;
   member: MemberEntity;
-  isClicked: Boolean;
+  isSendClicked: Boolean;
+  isReceiveClicked: Boolean;
   SoundIdfromChild: number;
   flag: Boolean;
+  disableSendButton: boolean;
+  disableReceiveButton: boolean;
 };
 
 export const SoundActivity = withStyles(styles)(
@@ -53,22 +49,25 @@ export const SoundActivity = withStyles(styles)(
       super(props);
 
       this.state = {
-        enabled: "",
+        enabled: false,
         member: null,
-        isClicked: false,
+        isSendClicked: false,
         SoundIdfromChild: 0,
-        flag: false
+        flag: false,
+        isReceiveClicked: false,
+        disableSendButton: false,
+        disableReceiveButton: false
       };
 
       this.onSave = this.onSave.bind(this);
       this.handleNearByDevices = this.handleNearByDevices.bind(this);
 
       this.handleClickSend = () => {
-        this.setState({ isClicked: true });
+        this.setState({ isSendClicked: true, disableSendButton: true });
       };
 
       this.handleClickReceived = () => {
-        this.setState(state => ({ enabled: "disabled" }));
+        this.setState(state => ({ enabled: true }));
         this.props.fetchReceiveRequest(this.props.soundId);
       };
     }
@@ -80,10 +79,12 @@ export const SoundActivity = withStyles(styles)(
           amount,
           reason,
           "Fetching Member...",
-          "03-Jan-2019",
-          "Send"
+          new Date(),
+          "Send",
+          this.props.member.id
         )
       );
+      this.setState({ disableSendButton: false });
     }
 
     mapToTransaction = (
@@ -91,8 +92,9 @@ export const SoundActivity = withStyles(styles)(
       transaction_amount: number,
       transaction_status: string,
       transaction_party: string,
-      transaction_time: string,
-      transaction_type: string
+      transaction_time: Date,
+      transaction_type: string,
+      member_id: number
     ): TransactionEntity => {
       return {
         id: id,
@@ -100,15 +102,17 @@ export const SoundActivity = withStyles(styles)(
         transaction_status: transaction_status,
         transaction_time: transaction_time,
         transaction_party: transaction_party,
-        transaction_type: transaction_type
+        transaction_type: transaction_type,
+        member_id: member_id
       };
     };
 
     handleNearByDevices(data) {
-      this.setState({ SoundIdfromChild: data }, () =>
-        this.props.fetchMemberById(this.state.SoundIdfromChild)
-      );
+      this.setState({ SoundIdfromChild: data }, () => {
+        this.props.fetchMemberById(this.state.SoundIdfromChild);
+      });
       this.setState({ flag: true });
+
       // this.setMemberForm(<MemberForm />);
 
       //1.Scan for nearby devices.
@@ -122,15 +126,14 @@ export const SoundActivity = withStyles(styles)(
 
     render() {
       const { classes } = this.props;
-      const isClicked = this.state.isClicked;
-      let text, comp, fields;
-      if (isClicked) {
+      const isSendClicked = this.state.isSendClicked;
+      let text, comp;
+      if (isSendClicked) {
         text = <h2>{this.props.member.avatar_url}</h2>;
         comp = <ScanNearby handlerFromParent={this.handleNearByDevices} />;
       } else {
         text = "";
         comp = "";
-        fields = "";
       }
       return (
         <div>
@@ -139,27 +142,26 @@ export const SoundActivity = withStyles(styles)(
             color="primary"
             className={classes.button}
             onClick={this.handleClickSend}
+            disabled={this.state.disableSendButton}
           >
             Send
           </Button>
 
           <br />
-          <Button
+          {/* <Button
             variant="contained"
             color="secondary"
             className={classes.button}
             onClick={this.handleClickReceived}
           >
             Receive
-          </Button>
+          </Button> */}
+
+          <BroadcastId />
           {text}
           <br />
           {comp}
-          <h5>
-            Received By Parent:
-            <br />
-            {this.state.SoundIdfromChild}
-          </h5>
+
           {this.state.flag ? <MemberForm onSave={this.onSave} /> : ""}
         </div>
       );

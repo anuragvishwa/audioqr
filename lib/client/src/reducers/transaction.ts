@@ -7,7 +7,8 @@ const createEmptyTransaction = (): TransactionEntity => ({
   transaction_status: null,
   transaction_time: null,
   transaction_type: null,
-  id: null
+  id: null,
+  member_id: 0
 });
 
 export const transactionReducer = (

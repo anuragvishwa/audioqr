@@ -13,6 +13,7 @@ export const saveTransactionAction = (
     transactionFormValidation
       .validateForm(transaction)
       .then(formValidationResult => {
+        console.log(formValidationResult);
         if (formValidationResult.succeeded) {
           saveTransaction(transaction);
         }

@@ -6,17 +6,17 @@ export const transactions: TransactionEntity[] = [
     transaction_amount: 20,
     transaction_party: "icici bank",
     transaction_type: "debit",
-
+    member_id: 93,
     transaction_status: "Pending",
-    transaction_time: Date()
+    transaction_time: new Date()
   },
   {
     id: 1457913,
     transaction_amount: 201,
     transaction_party: "icici bank",
     transaction_type: "credit",
-
+    member_id: 94,
     transaction_status: "Completed",
-    transaction_time: Date()
+    transaction_time: new Date()
   }
 ];

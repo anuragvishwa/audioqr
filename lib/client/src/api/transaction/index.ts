@@ -34,7 +34,8 @@ const mapToTransaction = (userTransaction): TransactionEntity => {
     transaction_party: userTransaction.transaction_party,
     transaction_status: userTransaction.transaction_status,
     transaction_time: userTransaction.transaction_time,
-    transaction_type: userTransaction.transaction_type
+    transaction_type: userTransaction.transaction_type,
+    member_id: userTransaction.following
   };
 };
 
@@ -45,7 +46,8 @@ const mapToTransactionAsync = (userTransaction): TransactionEntity => {
     transaction_party: userTransaction.name,
     transaction_status: userTransaction.hireables,
     transaction_time: userTransaction.created_at,
-    transaction_type: userTransaction.login
+    transaction_type: userTransaction.login,
+    member_id: userTransaction.following
   };
 };
 
@@ -66,7 +68,7 @@ const saveTransaction = (transaction: TransactionEntity): Promise<boolean> => {
   // const index = mockTransactions.findIndex(t => t.id === transaction.id);
 
   // index >= 0 ? updateMember(member, index) : insertMember(member);
-
+  console.log(transaction);
   insertTransaction(transaction);
   return Promise.resolve(true);
 };
