@@ -157,7 +157,7 @@ export const SoundActivity = withStyles(styles)(
             Receive
           </Button> */}
 
-          <BroadcastId />
+          <BroadcastId memberId={this.props.member.id} />
           {text}
           <br />
           {comp}

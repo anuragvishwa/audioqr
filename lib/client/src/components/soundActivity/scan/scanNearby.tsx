@@ -23,7 +23,6 @@ export class scanNearby extends React.Component<Props, State> {
     );
     container.addEventListener("change", this.handleOnChange.bind(this));
 
-    //Broadcast audio
     var broadcast = document.querySelector("[data-send-para]");
     broadcast.innerHTML = "vishwa";
   }

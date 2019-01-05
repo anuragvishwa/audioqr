@@ -2,7 +2,7 @@ import * as React from "react";
 import Script from "react-load-script";
 
 interface Props {
-  // handlerFromParent: (data) => void;
+  memberId: number;
 }
 
 type State = {
@@ -19,7 +19,7 @@ export class BroadcastId extends React.Component<Props, State> {
 
   componentDidMount() {
     var broadcast = document.querySelector("[data-send-para]");
-    broadcast.innerHTML = "vishwa";
+    broadcast.innerHTML = this.props.memberId.toString();
   }
 
   render() {

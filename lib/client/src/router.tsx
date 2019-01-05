@@ -12,6 +12,7 @@ import {
 } from "./components";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { ProfilePage } from "./components/profile/page";
 
 export const AppRouter: React.StatelessComponent<{}> = () => {
   return (
@@ -31,6 +32,7 @@ export const AppRouter: React.StatelessComponent<{}> = () => {
               component={TransactionPageContainer}
             />
             <Route path="/sound/:id" component={SoundPageContainer} />
+            <Route path="/profile" component={ProfilePage} />
           </Switch>
         </div>
       </Router>
