@@ -9,6 +9,6 @@
     "outDir": "./dist",
     "baseUrl": "./lib"
   },
-  "include": ["lib/**/*.ts"],
+  "include": ["lib/**/**/**/**/**/**/**/**/**/**/**/**/*.ts"],
   "exclude": ["node_modules"]
 }
